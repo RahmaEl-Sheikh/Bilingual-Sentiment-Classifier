@@ -1,0 +1,78 @@
+{
+  "en": {
+    "language": "English (movie reviews)",
+    "dataset_size": 2000,
+    "train_size": 1600,
+    "test_size": 400,
+    "vocab_size": 10000,
+    "best_model": "linear_svm",
+    "all_results": {
+      "logistic_regression": {
+        "accuracy": 0.8625,
+        "precision": 0.8436,
+        "recall": 0.89,
+        "f1": 0.8662,
+        "train_seconds": 0.05
+      },
+      "linear_svm": {
+        "accuracy": 0.875,
+        "precision": 0.8606,
+        "recall": 0.895,
+        "f1": 0.8775,
+        "train_seconds": 0.04
+      },
+      "multinomial_nb": {
+        "accuracy": 0.835,
+        "precision": 0.8284,
+        "recall": 0.845,
+        "f1": 0.8366,
+        "train_seconds": 0.01
+      },
+      "neural_net_mlp": {
+        "accuracy": 0.855,
+        "precision": 0.8413,
+        "recall": 0.875,
+        "f1": 0.8578,
+        "train_seconds": 5.21
+      }
+    }
+  },
+  "ar": {
+    "language": "Arabic (HARD hotel reviews)",
+    "dataset_size": 15887,
+    "train_size": 12709,
+    "test_size": 3178,
+    "vocab_size": 10000,
+    "best_model": "logistic_regression",
+    "all_results": {
+      "logistic_regression": {
+        "accuracy": 0.916,
+        "precision": 0.9151,
+        "recall": 0.9168,
+        "f1": 0.916,
+        "train_seconds": 0.05
+      },
+      "linear_svm": {
+        "accuracy": 0.9138,
+        "precision": 0.9116,
+        "recall": 0.9162,
+        "f1": 0.9139,
+        "train_seconds": 0.09
+      },
+      "multinomial_nb": {
+        "accuracy": 0.9106,
+        "precision": 0.9168,
+        "recall": 0.903,
+        "f1": 0.9098,
+        "train_seconds": 0.01
+      },
+      "neural_net_mlp": {
+        "accuracy": 0.911,
+        "precision": 0.9101,
+        "recall": 0.9118,
+        "f1": 0.9109,
+        "train_seconds": 13.64
+      }
+    }
+  }
+}

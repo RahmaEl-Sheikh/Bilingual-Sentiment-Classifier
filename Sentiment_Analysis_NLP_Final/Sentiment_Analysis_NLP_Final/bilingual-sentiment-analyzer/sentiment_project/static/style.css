@@ -1,0 +1,410 @@
+/* ===========================================================
+   Bilingual Sentiment Analyzer — visual language
+   Concept: an editor's ledger sheet. Text goes in, gets marked
+   up the way a proofreader marks a page, and comes back out
+   stamped with a verdict. The one on-brief flourish is the
+   hero title itself: English and Arabic set as mirror image
+   headlines that read toward each other and meet in the middle.
+   =========================================================== */
+
+:root {
+  --paper: #EBEEE6;
+  --paper-line: #D6DBCC;
+  --card: #F7F8F3;
+  --ink: #20241F;
+  --ink-soft: #5B6358;
+  --ink-faint: #8A9184;
+  --positive: #1F6E52;
+  --positive-soft: #E3EFE8;
+  --negative: #A83B2A;
+  --negative-soft: #F4E6E1;
+  --accent: #2F4858;
+  --rule: #CDD3C3;
+
+  --font-display-en: 'Fraunces', Georgia, serif;
+  --font-display-ar: 'Amiri', serif;
+  --font-body-en: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-body-ar: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --max-w: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body-en);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+}
+
+:lang(ar) { font-family: var(--font-body-ar); }
+
+/* faint ledger rules across the whole page */
+.ledger-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 35px,
+    var(--paper-line) 35px,
+    var(--paper-line) 36px
+  );
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 120px, black 90%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 120px, black 90%, transparent);
+}
+
+main, header, footer { position: relative; z-index: 1; }
+
+a { color: var(--accent); }
+
+/* ---------------- Hero ---------------- */
+.hero { padding: 4.5rem 1.5rem 3rem; }
+.hero-inner { max-width: 920px; margin: 0 auto; text-align: center; }
+
+.title-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.title-en,
+.title-ar {
+  margin: 0;
+  font-weight: 500;
+  line-height: 0.98;
+  flex: 0 1 auto;
+}
+
+.title-en {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+.title-ar {
+  font-family: var(--font-display-ar);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  text-align: left;
+}
+
+.title-slash {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  color: var(--ink-faint);
+  font-weight: 300;
+}
+
+.hero-sub {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+.hero-sub-en { display: block; }
+.hero-sub-ar { display: block; margin-top: 0.35rem; font-size: 0.95rem; }
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 2.25rem;
+  flex-wrap: wrap;
+}
+.stat { display: flex; flex-direction: column; align-items: center; }
+.stat-num {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin-top: 0.15rem;
+}
+
+/* ---------------- Desk / layout ---------------- */
+.desk {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---------------- Input card ---------------- */
+.input-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 0 var(--rule), 0 14px 30px -22px rgba(32, 36, 31, 0.35);
+}
+
+.card-label { margin-bottom: 0.7rem; display: flex; flex-direction: column; gap: 0.15rem; }
+.label-en { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.label-ar { font-size: 0.8rem; color: var(--ink-faint); }
+
+textarea#text-input {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--font-body-en);
+  font-size: 1.05rem;
+  color: var(--ink);
+  padding: 0.4rem 0.1rem 0.9rem;
+  outline: none;
+}
+textarea#text-input::placeholder { color: var(--ink-faint); }
+textarea#text-input:focus { border-bottom-color: var(--accent); }
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.examples { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.example-chip {
+  font-family: var(--font-body-en);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px dashed var(--ink-faint);
+  border-radius: 3px;
+  padding: 0.32rem 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.example-chip:hover { background: var(--paper); border-color: var(--ink-soft); }
+.example-chip[lang="ar"] { font-family: var(--font-body-ar); }
+
+.analyze-btn {
+  font-family: var(--font-body-en);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--card);
+  background: var(--ink);
+  border: none;
+  border-radius: 4px;
+  padding: 0.65rem 1.4rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  margin-left: auto;
+}
+.analyze-btn:hover { background: var(--accent); }
+.analyze-btn:active { transform: translateY(1px); }
+.analyze-btn .btn-ar { font-family: var(--font-body-ar); opacity: 0.75; font-size: 0.85em; }
+.analyze-btn::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.analyze-btn.is-loading { opacity: 0.7; cursor: progress; }
+
+.input-error {
+  color: var(--negative);
+  font-size: 0.85rem;
+  margin: 0.7rem 0 0;
+}
+
+/* ---------------- Results ---------------- */
+.result-area { display: flex; flex-direction: column; gap: 1rem; }
+
+.result-top {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.stamp-wrap { flex: 0 0 auto; }
+.stamp {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-7deg);
+  mix-blend-mode: multiply;
+  color: var(--ink);
+  position: relative;
+  text-align: center;
+}
+.stamp::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+.stamp.is-positive { color: var(--positive); }
+.stamp.is-negative { color: var(--negative); }
+.stamp-word-en {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.stamp-word-ar {
+  font-family: var(--font-display-ar);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 0.1rem;
+}
+
+.meter-block { flex: 1 1 260px; min-width: 220px; }
+.meter-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.35rem; }
+.meter-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.meter-value { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 600; }
+.meter-track { height: 8px; background: var(--rule); border-radius: 4px; overflow: hidden; }
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--ink);
+  border-radius: 4px;
+  transition: width 0.7s cubic-bezier(.2,.8,.2,1);
+}
+.meter-fill.is-positive { background: var(--positive); }
+.meter-fill.is-negative { background: var(--negative); }
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 1.1rem 0 0;
+}
+.meta-grid dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+}
+.meta-grid dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* ---------------- Pipeline detail ---------------- */
+.pipeline-detail {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+}
+.pipeline-detail summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.pipeline-detail summary .summary-ar { font-family: var(--font-body-ar); color: var(--ink-faint); }
+.pipeline-body { margin-top: 1rem; }
+.pipeline-note {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.75rem;
+}
+.token-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.token {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink-soft);
+}
+
+/* ---------------- Error ---------------- */
+.error-area {
+  background: var(--negative-soft);
+  border: 1px solid var(--negative);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  color: var(--negative);
+  font-size: 0.9rem;
+}
+
+/* ---------------- Footer ---------------- */
+.colophon {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  text-align: center;
+}
+.colophon p {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+/* ---------------- Focus states ---------------- */
+button:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 560px) {
+  .title-en, .title-ar { text-align: center; }
+  .title-pair { flex-direction: column; gap: 0.25rem; }
+  .title-slash { display: none; }
+  .result-top { flex-direction: column; align-items: flex-start; }
+  .analyze-btn { margin-left: 0; width: 100%; justify-content: center; }
+  .card-footer { flex-direction: column; align-items: stretch; }
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .meter-fill, .analyze-btn { transition: none; }
+}
